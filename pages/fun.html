@@ -1,0 +1,577 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>⚠️ ВЗЛОМАНО</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 18px 24px;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid rgba(0, 255, 65, 0.1);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .logo { font-size: 22px; font-weight: 600; color: #d4c5a0; letter-spacing: -0.3px; }
+        .logo span { font-weight: 300; color: #6a7a90; }
+        nav {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            font-weight: 450;
+            flex-wrap: wrap;
+        }
+        nav a {
+            color: #8a9aae;
+            text-decoration: none;
+            transition: 0.2s;
+            border-bottom: 1.5px solid transparent;
+            padding-bottom: 4px;
+        }
+        nav a:hover { color: #d4c5a0; border-bottom-color: #d4c5a0; }
+        nav .active { color: #00ff41; border-bottom-color: #00ff41; }
+
+        .terminal {
+            position: relative;
+            z-index: 10;
+            max-width: 850px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 20px 24px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(0, 255, 65, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 0 60px rgba(0, 255, 65, 0.03);
+            flex: 1;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.1);
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            color: #006600;
+        }
+        .terminal-header .dots span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .terminal-header .dots .red { background: #ff0040; }
+        .terminal-header .dots .yellow { background: #ffcc00; }
+        .terminal-header .dots .green { background: #00ff41; }
+
+        .terminal-body {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 200px;
+            max-height: 500px;
+            padding-right: 4px;
+        }
+        .terminal-body::-webkit-scrollbar { width: 4px; }
+        .terminal-body::-webkit-scrollbar-track { background: transparent; }
+        .terminal-body::-webkit-scrollbar-thumb { background: #00ff41; border-radius: 4px; }
+
+        .line { margin-bottom: 3px; word-wrap: break-word; line-height: 1.5; }
+        .line .prompt { color: #00ff41; font-weight: 600; }
+        .line .cmd { color: #e8e6e3; }
+        .line .output { color: #b0b8c4; padding-left: 16px; display: block; }
+        .line .output.error { color: #ff0040; }
+        .line .output.success { color: #00ff41; }
+        .line .output.highlight { color: #d4c5a0; }
+
+        .input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            border-top: 1px solid rgba(0, 255, 65, 0.05);
+            padding-top: 12px;
+        }
+        .input-line .prompt { color: #00ff41; font-weight: 600; margin-right: 10px; }
+        .input-line input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #e8e6e3;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            outline: none;
+            padding: 4px 0;
+        }
+        .input-line input::placeholder { color: #2a3a2a; }
+
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid rgba(0, 255, 65, 0.1);
+            padding: 6px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #006600;
+            z-index: 20;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .status-bar .highlight { color: #00ff41; }
+
+        @media (max-width: 600px) {
+            .terminal { margin: 16px; padding: 14px 16px; }
+            .terminal-body { max-height: 300px; }
+            nav { gap: 10px; font-size: 11px; }
+            .input-line input { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <header>
+        <div class="header-inner">
+            <div class="logo">Аня <span>·</span></div>
+            <nav>
+                <a href="../index.html">Главная</a>
+                <a href="about.html">Обо мне</a>
+                <a href="quotes.html">Цитаты</a>
+                <a href="memes.html">Мемы</a>
+                <a href="creativity.html">Творчество</a>
+                <a href="achievements.html">Достижения</a>
+                <a href="music.html">🎵 Музыка</a>
+                <a href="fun.html">😂 Прикол</a>
+                <a href="hacked.html" class="active">💀 Взломано</a>
+                <a href="surprise.html">✦ Сюрприз</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+            <span>root@hacked-server:~</span>
+            <span>🔓 доступ открыт</span>
+        </div>
+
+        <div class="terminal-body" id="terminalBody">
+            <div class="line"><span class="output success">⚠️ ВЗЛОМ УСПЕШНО ВЫПОЛНЕН</span></div>
+            <div class="line"><span class="output">Введи <span class="highlight">help</span> для списка команд</span></div>
+            <div class="line" id="outputArea"></div>
+        </div>
+
+        <div class="input-line">
+            <span class="prompt">$</span>
+            <input type="text" id="cmdInput" placeholder="введи команду..." autofocus />
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="left">
+            <span>🖥️ <span class="highlight">ROOT</span>@hacked-server</span>
+            <span>🔓 <span class="highlight">ДОСТУП ОТКРЫТ</span></span>
+        </div>
+        <div class="right">
+            <span>⏱️ <span id="timeDisplay">00:00:00</span></span>
+        </div>
+    </div>
+
+    <script>
+        // =============================================================
+        // 1. МАТРИЦА
+        // =============================================================
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
+        const fontSize = 14;
+        const columns = Math.floor(w / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+            ctx.fillRect(0, 0, w, h);
+            ctx.fillStyle = '#00ff41';
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                ctx.fillText(text, x, y);
+                if (y > h && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+
+        // =============================================================
+        // 2. ЧАСЫ
+        // =============================================================
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('timeDisplay').textContent = now.toTimeString().split(' ')[0];
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // =============================================================
+        // 3. ТЕРМИНАЛ С 30+ КОМАНДАМИ
+        // =============================================================
+        const cmdInput = document.getElementById('cmdInput');
+        const terminalBody = document.getElementById('terminalBody');
+
+        // 🚀 СЛОВАРЬ КОМАНД (30 штук)
+        const responses = {
+
+            // === ОСНОВНЫЕ ===
+            help: [
+                '📋 ДОСТУПНЫЕ КОМАНДЫ:',
+                '',
+                '  whoami     — узнать, кто ты',
+                '  hack       — взломать что-нибудь',
+                '  status     — статус системы',
+                '  secret     — секретное сообщение',
+                '  clear      — очистить экран',
+                '  exit       — выйти из системы',
+                '',
+                '  date       — показать дату',
+                '  time       — показать время',
+                '  uptime     — сколько работает система',
+                '  sysinfo    — информация о системе',
+                '  ip         — твой IP',
+                '  ping       — пинг (шутка)',
+                '  echo       — повторить за мной',
+                '  say        — сказать что-то',
+                '  joke       — шутка дня',
+                '  fortune    — предсказание',
+                '  rickroll   — ссылка на Рика',
+                '  matrix     — эффект матрицы',
+                '  sudo       — суперпользователь',
+                '  neofetch   — крутой вывод',
+                '  cowsay     — корова говорит',
+                '  ascii      — крутая ASCII-картинка',
+                '  yes        — бесконечный ответ',
+                '  lol        — смех',
+                '  love       — признание',
+                '  cat        — котик',
+                '  dog        — собачка',
+                '  starwars   — звёздные войны',
+                '  terminal   — про терминал',
+                '  hacker     — про хакеров',
+                '  anna       — про Аню'
+            ],
+
+            // === ИНФОРМАЦИОННЫЕ ===
+            whoami: [
+                '👤 Ты — Аня.',
+                'Но система считает, что ты — главный администратор вселенной.',
+                'На самом деле, ты просто Аня. И это круто.'
+            ],
+
+            date: [
+                `📅 Сегодня: ${new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}`
+            ],
+            time: [
+                `⏱️ Текущее время: ${new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`
+            ],
+            uptime: [
+                '⏳ Система работает 0 дней 0 часов 0 минут.',
+                'Потому что это просто шутка.'
+            ],
+            sysinfo: [
+                '💻 СИСТЕМА:',
+                '  ОС: HackedOS 2026',
+                '  Ядро: 6.9.0-hacked',
+                '  Процессор: Твой мозг (очень мощный)',
+                '  Память: 999999999 GB (всё занято Аней)'
+            ],
+            ip: [
+                '🌐 Твой IP: 127.0.0.1',
+                'Это localhost. Ты у себя дома, хакер.'
+            ],
+
+            // === ДЕЙСТВИЯ ===
+            hack: [
+                '🔓 Взлом...',
+                '🔓 Взлом...',
+                '🔥 Доступ получен!',
+                'Ты взломала этот терминал.',
+                '😹 Ха-ха, ты думала, будет что-то серьёзное?',
+                'Взломай лучше свой будильник завтра утром.'
+            ],
+
+            status: [
+                '🟢 Система: взломана',
+                '🟢 Доступ: открыт',
+                '🟢 Угрозы: не обнаружены',
+                '🟢 Настроение Ани: отличное (надеюсь)',
+                '🟢 Котики: в безопасности'
+            ],
+
+            secret: [
+                '🤫 Секрет: ты — самая крутая.',
+                'Но ты это и так знаешь.',
+                'Ладно, ещё один секрет: сайт сделан специально для тебя.'
+            ],
+
+            sudo: [
+                '🔑 Ты уже суперпользователь.',
+                'Тебе не нужен sudo. Ты — главная.'
+            ],
+
+            // === РАЗВЛЕКАТЕЛЬНЫЕ ===
+            joke: [
+                '😂 ШУТКА ДНЯ:',
+                '— Что сказал один хакер другому?',
+                '— «Я тебя взломаю!»',
+                '— «А я тебя — в сердечко!»'
+            ],
+
+            fortune: [
+                '🔮 ПРЕДСКАЗАНИЕ:',
+                'Сегодня тебя ждёт что-то приятное.',
+                'Возможно, это будет чашка чая.',
+                'Или комплимент.',
+                'Или просто хорошее настроение.'
+            ],
+
+            rickroll: [
+                '🎵 Ты попала под Рикролл!',
+                'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                '😹 Не благодари.'
+            ],
+
+            matrix: [
+                '🌀 МАТРИЦА АКТИВИРОВАНА',
+                'Ты уже в матрице. Просто посмотри на фон.'
+            ],
+
+            neofetch: [
+                '🖥️ NEOFETCH:',
+                '  OS: АняOS 2026',
+                '  Kernel: 6.9.0-anya',
+                '  Shell: bash (на самом деле нет)',
+                '  Resolution: 1920x1080 (или больше)',
+                '  CPU: Твой мозг (Intel i9)',
+                '  Memory: 9999999 GB (вся занята мыслями о ней)'
+            ],
+
+            cowsay: [
+                '🐮 КОРОВА ГОВОРИТ:',
+                '  _________________',
+                ' < Привет, Аня! >',
+                '  -----------------',
+                '         \\   ^__^',
+                '          \\  (oo)\\_______',
+                '             (__)\\       )\\/\\',
+                '                 ||----w |',
+                '                 ||     ||'
+            ],
+
+            ascii: [
+                '🎨 ASCII-КАРТИНКА:',
+                '    /\\_/\\  ',
+                '   ( o.o ) ',
+                '    > ^ <  ',
+                'Котик тебя приветствует!'
+            ],
+
+            yes: [
+                'Да',
+                'Да',
+                'Да',
+                'Да',
+                '... и так бесконечно.',
+                'Но я остановлюсь, потому что это бессмысленно.'
+            ],
+
+            lol: [
+                '😹 ЛОЛ!',
+                'Ха-ха-ха!',
+                'Ой, я уронил свой монитор от смеха.'
+            ],
+
+            love: [
+                '❤️ ПРИЗНАНИЕ:',
+                'Ты — самая лучшая.',
+                'Это не хакерский факт, а просто правда.'
+            ],
+
+            cat: [
+                '🐱 КОТИК:',
+                '  /\\_/\\  ',
+                ' ( o.o ) ',
+                '  > ^ <  ',
+                'Мяу. Ты сегодня прекрасна.'
+            ],
+
+            dog: [
+                '🐶 СОБАЧКА:',
+                '  / \\__',
+                ' (    @\\___',
+                ' /         O',
+                '/   (_____/',
+                '🐕 Гав! Хорошего дня!'
+            ],
+
+            starwars: [
+                '🌌 ЗВЁЗДНЫЕ ВОЙНЫ:',
+                '— Я твой отец.',
+                '— Нет!',
+                '... А ты думала, я про что?'
+            ],
+
+            // === СМЕШНЫЕ ===
+            ping: [
+                '🏓 ПИНГ:',
+                'PING google.com (142.250.185.78) 56(84) bytes of data.',
+                '64 bytes from google.com: icmp_seq=1 ttl=117 time=0.01 ms',
+                '64 bytes from google.com: icmp_seq=2 ttl=117 time=0.02 ms',
+                '64 bytes from google.com: icmp_seq=3 ttl=117 time=0.01 ms',
+                'Доступ есть. Но это ничего не значит.'
+            ],
+
+            echo: [
+                '🎙️ ЭХО:',
+                'Ты сказала что-то? Я не слышал.',
+                'Напиши команду: echo "твой текст" — и я повторю.'
+            ],
+
+            say: [
+                '🗣️ СКАЗАТЬ:',
+                'Ты хочешь что-то сказать?',
+                'Скажи это вслух. Я подожду.'
+            ],
+
+            terminal: [
+                '🖥️ ТЕРМИНАЛ:',
+                'Ты сейчас в терминале.',
+                'Это как командная строка, только круче.',
+                'Потому что здесь есть Аня.'
+            ],
+
+            hacker: [
+                '💀 ХАКЕР:',
+                'Ты думаешь, хакеры сидят в чёрных капюшонах?',
+                'На самом деле они сидят и пьют чай.',
+                'Как и ты сейчас.'
+            ],
+
+            anna: [
+                '🌟 АНЯ:',
+                'Аня — это имя.',
+                'Но не просто имя. Это целая вселенная.',
+                'И она сейчас смотрит на этот терминал.',
+                'Привет, Аня! 👋'
+            ],
+
+            // === ВЫХОД ===
+            exit: [
+                '👋 Выход из системы...',
+                'Ну ты чего? Не уходи.',
+                'Ладно, просто обнови страницу — и снова заходи.'
+            ],
+
+            // === СТАНДАРТНЫЙ ОТВЕТ ===
+            default: [
+                '🤔 Команда не распознана.',
+                'Попробуй: help — и увидишь список.'
+            ]
+        };
+
+        // === ОБРАБОТЧИК ===
+        cmdInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const cmd = this.value.trim().toLowerCase();
+                this.value = '';
+                if (cmd === '') return;
+
+                // Показываем команду
+                const line = document.createElement('div');
+                line.className = 'line';
+                line.innerHTML = `<span class="prompt">$</span> <span class="cmd">${cmd}</span>`;
+                terminalBody.appendChild(line);
+
+                // Ищем ответ
+                let reply = responses.default;
+                let isClear = false;
+
+                if (cmd === 'clear') {
+                    terminalBody.innerHTML = '';
+                    isClear = true;
+                } else if (responses[cmd]) {
+                    reply = responses[cmd];
+                }
+
+                if (!isClear) {
+                    const outputLine = document.createElement('div');
+                    outputLine.className = 'line';
+                    let outputHtml = '';
+                    if (Array.isArray(reply)) {
+                        reply.forEach(line => {
+                            outputHtml += `<span class="output">${line}</span><br>`;
+                        });
+                    } else {
+                        outputHtml = `<span class="output">${reply}</span>`;
+                    }
+                    outputLine.innerHTML = outputHtml;
+                    terminalBody.appendChild(outputLine);
+                }
+
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+            }
+        });
+
+        window.addEventListener('load', function() { cmdInput.focus(); });
+        terminalBody.addEventListener('click', function() { cmdInput.focus(); });
+    </script>
+
+</body>
+</html>

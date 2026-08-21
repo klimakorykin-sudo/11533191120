@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Аня · Творчество</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+        /* Стили для галереи */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .gallery-grid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 1px solid #2e3643;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .gallery-grid img:hover {
+            transform: scale(1.02);
+            border-color: #d4c5a0;
+            box-shadow: 0 8px 24px rgba(212, 197, 160, 0.15);
+        }
+        .empty-message {
+            color: #6a7a90;
+            text-align: center;
+            padding: 60px 0;
+            font-style: italic;
+        }
+
+        /* ===== ЛАЙТБОКС (увеличение картинки) ===== */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .lightbox-overlay.active {
+            display: flex;
+        }
+        .lightbox-overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 0 60px rgba(212, 197, 160, 0.15);
+            animation: lightboxFade 0.3s ease;
+        }
+        @keyframes lightboxFade {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 40px;
+            color: #d4c5a0;
+            cursor: pointer;
+            transition: 0.3s;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            z-index: 10000;
+        }
+        .lightbox-close:hover {
+            transform: rotate(90deg);
+            color: #fff;
+        }
+        .lightbox-counter {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #6a7a90;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 20px;
+            border-radius: 40px;
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 48px;
+            color: #d4c5a0;
+            cursor: pointer;
+            transition: 0.3s;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            padding: 20px 10px;
+            user-select: none;
+            z-index: 10000;
+        }
+        .lightbox-nav:hover {
+            color: #fff;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .lightbox-nav.prev {
+            left: 20px;
+        }
+        .lightbox-nav.next {
+            right: 20px;
+        }
+        @media (max-width: 600px) {
+            .lightbox-nav {
+                font-size: 32px;
+                padding: 10px 5px;
+            }
+            .lightbox-nav.prev { left: 5px; }
+            .lightbox-nav.next { right: 5px; }
+            .lightbox-close {
+                top: 15px;
+                right: 20px;
+                font-size: 30px;
+            }
+            .lightbox-overlay {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-inner">
+            <div class="logo">Аня <span>·</span></div>
+            <nav>
+                <a href="../index.html">Главная</a>
+                <a href="about.html">Обо мне</a>
+                <a href="quotes.html">Цитаты</a>
+                <a href="memes.html">Мемы</a>
+                <a href="creativity.html">Творчество</a>
+                <a href="achievements.html">Достижения</a>
+                <a href="music.html">Музыка</a>
+	<a href="fun.html">Для прикола</a>
+                <a href="surprise.html">✦ Сюрприз</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🎨 Творчество</h2>
+            <p style="color: #b0b8c4; margin-bottom: 20px;">Рисунки, которые она создала. Каждый — частичка её мира.</p>
+
+            <div class="gallery-grid" id="artGallery">
+                <!-- Картинки подгрузятся скриптом -->
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Сделано с <span class="heart">❤</span> для <strong>Сосницкой Анны Андреевны</strong></p>
+            <p class="footer-year">проект · 2026</p>
+        </div>
+    </footer>
+
+    <!-- ===== ЛАЙТБОКС (структура) ===== -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <button class="lightbox-close" id="lightboxClose">✕</button>
+        <button class="lightbox-nav prev" id="lightboxPrev">‹</button>
+        <button class="lightbox-nav next" id="lightboxNext">›</button>
+        <img id="lightboxImage" src="" alt="Увеличенный рисунок" />
+        <div class="lightbox-counter" id="lightboxCounter">1 / 1</div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // ===== ГАЛЕРЕЯ =====
+        const gallery = document.getElementById('artGallery');
+
+        // ===== ТВОИ РИСУНКИ (просто меняй числа) =====
+        const artFiles = [
+            '1.jpg',
+            '2.png',
+            '3.jpg',
+            
+        ];
+
+        if (artFiles.length === 0) {
+            gallery.innerHTML = '<div class="empty-message">🖼 Здесь скоро появятся рисунки Ани</div>';
+        } else {
+            artFiles.forEach(file => {
+                const img = document.createElement('img');
+                img.src = `../images/art/${file}`;
+                img.alt = 'Рисунок Ани';
+                img.loading = 'lazy';
+                img.dataset.index = artFiles.indexOf(file); // запоминаем индекс
+                gallery.appendChild(img);
+            });
+        }
+
+        // ===== ЛАЙТБОКС =====
+        const overlay = document.getElementById('lightboxOverlay');
+        const lightboxImg = document.getElementById('lightboxImage');
+        const closeBtn = document.getElementById('lightboxClose');
+        const prevBtn = document.getElementById('lightboxPrev');
+        const nextBtn = document.getElementById('lightboxNext');
+        const counter = document.getElementById('lightboxCounter');
+
+        let currentIndex = 0;
+        let allImages = []; // массив со ссылками на все картинки
+
+        // Собираем все ссылки на картинки из галереи
+        function updateLightboxImages() {
+            const imgs = gallery.querySelectorAll('img');
+            allImages = [];
+            imgs.forEach(img => {
+                allImages.push(img.src);
+            });
+        }
+
+        // Открыть лайтбокс с картинкой по индексу
+        function openLightbox(index) {
+            if (allImages.length === 0) return;
+            currentIndex = index;
+            lightboxImg.src = allImages[currentIndex];
+            counter.textContent = `${currentIndex + 1} / ${allImages.length}`;
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // запрещаем скролл
+        }
+
+        // Закрыть лайтбокс
+        function closeLightbox() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = ''; // возвращаем скролл
+        }
+
+        // Переключить на предыдущую/следующую
+        function changeImage(direction) {
+            if (allImages.length === 0) return;
+            currentIndex = (currentIndex + direction + allImages.length) % allImages.length;
+            lightboxImg.src = allImages[currentIndex];
+            counter.textContent = `${currentIndex + 1} / ${allImages.length}`;
+        }
+
+        // --- Обработчики событий ---
+
+        // Клик по картинке в галерее
+        gallery.addEventListener('click', function(e) {
+            if (e.target.tagName === 'IMG') {
+                const index = parseInt(e.target.dataset.index);
+                updateLightboxImages();
+                openLightbox(index);
+            }
+        });
+
+        // Закрытие по клику на фон (overlay)
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeLightbox();
+            }
+        });
+
+        // Кнопка "Закрыть"
+        closeBtn.addEventListener('click', closeLightbox);
+
+        // Кнопки "Вперёд/Назад"
+        prevBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            changeImage(-1);
+        });
+        nextBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            changeImage(1);
+        });
+
+        // Нажатие клавиш Esc, стрелки влево/вправо
+        document.addEventListener('keydown', function(e) {
+            if (!overlay.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') changeImage(-1);
+            if (e.key === 'ArrowRight') changeImage(1);
+        });
+
+        // Обновляем массив при загрузке страницы (на случай, если картинки уже есть)
+        setTimeout(updateLightboxImages, 300);
+    </script>
+</body>
+</html>

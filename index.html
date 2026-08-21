@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Аня · Главная</title>
+    <meta name="description" content="Персональный сайт Ани. Цитаты, вдохновение и мемы.">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        #consentOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 13, 16, 0.95);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            transition: opacity 0.6s ease;
+        }
+        #consentOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #consentBox {
+            max-width: 480px;
+            width: 90%;
+            padding: 36px 30px;
+            background: #141a22;
+            border-radius: 28px;
+            border: 1px solid #2e3643;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+        }
+        #consentBox .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: #d4c5a0;
+        }
+        #consentBox .logo span { color: #a8926a; }
+        #consentBox h2 {
+            font-weight: 400;
+            color: #e8e6e3;
+            margin: 8px 0 4px;
+            font-size: 24px;
+        }
+        #consentBox .sub {
+            color: #8a9aae;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .terms-text {
+            background: #0b0d10;
+            padding: 16px 18px;
+            border-radius: 16px;
+            text-align: left;
+            font-size: 14px;
+            color: #b0b8c4;
+            line-height: 1.7;
+            max-height: 260px;
+            overflow-y: auto;
+            border: 1px solid #1e232b;
+            margin-bottom: 20px;
+        }
+        .terms-text::-webkit-scrollbar {
+            width: 4px;
+        }
+        .terms-text::-webkit-scrollbar-thumb {
+            background: #2e3643;
+            border-radius: 4px;
+        }
+        .terms-text strong {
+            color: #d4c5a0;
+        }
+        .btn-group-consent {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn-consent {
+            padding: 14px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-consent.accept {
+            background: #d4c5a0;
+            color: #0b0d10;
+        }
+        .btn-consent.accept:hover {
+            background: #c2b28a;
+            transform: scale(1.02);
+        }
+        .btn-consent.decline {
+            background: transparent;
+            border: 1px solid #2e3643;
+            color: #6a7a90;
+        }
+        .btn-consent.decline:hover {
+            border-color: #e94560;
+            color: #e94560;
+        }
+        .consent-error {
+            color: #e94560;
+            font-size: 14px;
+            margin-top: 10px;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-inner">
+            <div class="logo">Аня <span>·</span></div>
+            <nav>
+                <a href="index.html">Главная</a>
+                <a href="pages/about.html">Обо мне</a>
+                <a href="pages/quotes.html">Цитаты</a>
+                <a href="pages/memes.html">Мемы</a>
+                <a href="pages/creativity.html">Творчество</a>
+                <a href="pages/achievements.html">Достижения</a>
+                <a href="pages/music.html">🎵 Музыка</a>
+	<a href="pages/fun.html">Для прикола</a>
+                <a href="pages/surprise.html">✦ Сюрприз</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="hero">
+        <div class="container hero-inner">
+            <div class="hero-text">
+                <div class="badge">✦ ПЕРСОНАЛЬНЫЙ САЙТ</div>
+                <h1>Аня · <span>вдохновение</span></h1>
+                <p>Это пространство, созданное для неё. Здесь живут её слова, её стиль и её сила.</p>
+                <div class="btn-group">
+                    <a href="pages/about.html" class="btn">Узнать больше</a>
+                </div>
+            </div>
+            <div class="hero-3d">
+                <div class="cube-wrapper">
+                    <div class="cube" id="cube">
+                        <div class="cube-face">✨</div>
+                        <div class="cube-face">🌸</div>
+                        <div class="cube-face">🦋</div>
+                        <div class="cube-face">🌙</div>
+                        <div class="cube-face">⭐</div>
+                        <div class="cube-face">💫</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Сделано <span class="heart"></span> для <strong>Сосницкой Анны Андреевны</strong></p>
+            <p class="footer-year">проект · 2026</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+
+    <!-- ========================================================= -->
+    <!--  ЭКРАН СОГЛАСИЯ                                            -->
+    <!-- ========================================================= -->
+    <div id="consentOverlay">
+        <div id="consentBox">
+            <div class="logo">Аня <span>·</span></div>
+            <h2>📋 Согласие</h2>
+            <p class="sub">Пожалуйста, ознакомься и прими условия</p>
+
+            <div class="terms-text">
+                <p><strong>1. Конфиденциальность</strong><br>
+                Твои данные (имя, почта) используются только для входа на этот сайт. Они никуда не передаются.</p>
+                <p><strong>2. Безопасность</strong><br>
+                Ты несёшь ответственность за сохранность своего пароля.</p>
+                <p><strong>3. Правила</strong><br>
+                Сайт создан для личного использования. Запрещено распространять ссылки без разрешения.</p>
+                <p><strong>4. Согласие</strong><br>
+                Нажимая «Принимаю», ты подтверждаешь, что прочитал(а) и согласен(на) с этими условиями.</p>
+                <p><strong>5. Доверие</strong><br>
+                Этот сайт создан с уважением и теплом к человеку, которому он посвящён. Если ты чувствуешь злость или несправедливость по отношению к ней — возможно, тебе стоит задуматься, зачем ты здесь. Нажимая «Принимаю», ты подтверждаешь, что готов(а) относиться с уважением.</p>
+            </div>
+
+            <div class="btn-group-consent">
+                <button class="btn-consent accept" id="acceptBtn">✅ Принимаю</button>
+                <button class="btn-consent decline" id="declineBtn">❌ Не принимаю</button>
+            </div>
+            <div class="consent-error" id="consentError"></div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================================
+        //  СОГЛАСИЕ
+        // =============================================================
+        const consentOverlay = document.getElementById('consentOverlay');
+        const acceptBtn = document.getElementById('acceptBtn');
+        const declineBtn = document.getElementById('declineBtn');
+        const errorDiv = document.getElementById('consentError');
+
+        function checkConsent() {
+            const hasConsent = localStorage.getItem('anya_consent');
+            if (hasConsent === 'true') {
+                consentOverlay.classList.add('hidden');
+                return true;
+            }
+            return false;
+        }
+
+        acceptBtn.addEventListener('click', function() {
+            localStorage.setItem('anya_consent', 'true');
+            consentOverlay.classList.add('hidden');
+            errorDiv.textContent = '';
+        });
+
+        declineBtn.addEventListener('click', function() {
+            errorDiv.textContent = '❌ Ты не принял(а) условия. Доступ к сайту закрыт.';
+            setTimeout(() => {
+                errorDiv.textContent = '❌ Если ты считаешь Аню злой или несправедливой — тебе сюда нельзя.';
+            }, 3000);
+        });
+
+        checkConsent();
+    </script>
+
+</body>
+</html>

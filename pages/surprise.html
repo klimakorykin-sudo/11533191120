@@ -1,0 +1,842 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>✦ СЮРПРИЗ ✦</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Caveat:wght@400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+        /* ===== БАЗА ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: #0b0b0e;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+        }
+
+        /* ===== ШАПКА ===== */
+        header {
+            position: relative;
+            z-index: 30;
+            padding: 18px 24px;
+            background: rgba(11, 11, 14, 0.7);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: 600;
+            color: #d4c5a0;
+            letter-spacing: -0.3px;
+        }
+        .logo span {
+            font-weight: 300;
+            color: #6a7a90;
+        }
+        nav {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            font-weight: 450;
+            flex-wrap: wrap;
+        }
+        nav a {
+            color: #8a9aae;
+            text-decoration: none;
+            transition: 0.2s;
+            border-bottom: 1.5px solid transparent;
+            padding-bottom: 4px;
+        }
+        nav a:hover {
+            color: #d4c5a0;
+            border-bottom-color: #d4c5a0;
+        }
+
+        /* ===== СЦЕНА ===== */
+        .stage {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 90px);
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* ===== ФОН ===== */
+        #bgCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* ===== СТЕКЛЯННАЯ КАРТОЧКА ===== */
+        .glass-card {
+            position: relative;
+            z-index: 5;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 32px;
+            padding: 40px 36px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+        .glass-card::-webkit-scrollbar {
+            width: 4px;
+        }
+        .glass-card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .glass-card::-webkit-scrollbar-thumb {
+            background: #2e3643;
+            border-radius: 4px;
+        }
+
+        /* ===== ПРИВЕТСТВИЕ ===== */
+        .hero-emoji {
+            font-size: 72px;
+            margin-bottom: 8px;
+            display: block;
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-16px);
+            }
+        }
+        .hero-title {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #e8e6e3;
+        }
+        .hero-title span {
+            background: linear-gradient(135deg, #d4c5a0, #e94560);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-sub {
+            font-size: 16px;
+            color: #8a9aae;
+            margin: 8px 0 20px;
+            line-height: 1.5;
+        }
+        .btn-primary {
+            background: rgba(212, 197, 160, 0.1);
+            border: 1px solid rgba(212, 197, 160, 0.2);
+            padding: 14px 32px;
+            border-radius: 60px;
+            color: #d4c5a0;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            backdrop-filter: blur(4px);
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-primary:hover {
+            background: rgba(212, 197, 160, 0.18);
+            border-color: #d4c5a0;
+            transform: scale(1.02);
+        }
+
+        /* ===== КОНВЕРТЫ ===== */
+        .envelope-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 12px;
+        }
+        .envelope-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 18px 12px;
+            cursor: pointer;
+            transition: 0.25s;
+            text-align: center;
+        }
+        .envelope-card:hover {
+            background: rgba(212, 197, 160, 0.06);
+            border-color: rgba(212, 197, 160, 0.2);
+            transform: translateY(-4px);
+        }
+        .envelope-card .icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .envelope-card .label {
+            font-size: 13px;
+            color: #b0b8c4;
+            font-weight: 500;
+        }
+
+        /* ===== КОНТЕНТ ===== */
+        .content-block {
+            display: none;
+            animation: fadeUp 0.6s ease;
+        }
+        .content-block.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .content-block h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #d4c5a0;
+            margin-bottom: 8px;
+            font-family: 'Playfair Display', serif;
+        }
+        .content-block p {
+            color: #b0b8c4;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* ===== ПИСЬМО ===== */
+        .letter-envelope {
+            background: rgba(212, 197, 160, 0.06);
+            border: 1px solid rgba(212, 197, 160, 0.1);
+            border-radius: 20px;
+            padding: 30px 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 12px 0;
+        }
+        .letter-envelope:hover {
+            background: rgba(212, 197, 160, 0.1);
+        }
+        .letter-envelope .icon {
+            font-size: 48px;
+            display: block;
+        }
+        .letter-envelope .label {
+            font-size: 14px;
+            color: #8a9aae;
+        }
+        .letter-text {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            color: #e8e6e3;
+            line-height: 1.6;
+            text-align: left;
+            padding: 12px 0;
+        }
+
+        /* ===== RSVP ===== */
+        .rsvp-input {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #e8e6e3;
+            font-size: 15px;
+            width: 100%;
+            margin: 6px 0;
+            font-family: 'Inter', sans-serif;
+        }
+        .rsvp-input:focus {
+            outline: none;
+            border-color: #d4c5a0;
+        }
+        .rsvp-result {
+            margin-top: 12px;
+            font-size: 18px;
+            color: #d4c5a0;
+            font-weight: 600;
+        }
+
+        /* ===== КНОПКА НАЗАД ===== */
+        .back-btn {
+            margin-top: 20px;
+            background: none;
+            border: none;
+            color: #6a7a90;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .back-btn:hover {
+            color: #d4c5a0;
+        }
+
+        /* ===== ГАЛЕРЕЯ ===== */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .memory-item {
+            background: #1e232b;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .memory-item:hover {
+            transform: scale(1.02);
+            border-color: #d4c5a0;
+        }
+        .memory-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* ===== ЛАЙТБОКС ===== */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .lightbox-overlay.active {
+            display: flex;
+        }
+        .lightbox-overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 0 60px rgba(212, 197, 160, 0.15);
+            animation: lightboxFade 0.3s ease;
+        }
+        @keyframes lightboxFade {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 40px;
+            color: #d4c5a0;
+            cursor: pointer;
+            transition: 0.3s;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            z-index: 10000;
+        }
+        .lightbox-close:hover {
+            transform: rotate(90deg);
+            color: #fff;
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 48px;
+            color: #d4c5a0;
+            cursor: pointer;
+            transition: 0.3s;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            padding: 20px 10px;
+            user-select: none;
+            z-index: 10000;
+        }
+        .lightbox-nav:hover {
+            color: #fff;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .lightbox-nav.prev {
+            left: 20px;
+        }
+        .lightbox-nav.next {
+            right: 20px;
+        }
+        .lightbox-counter {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #6a7a90;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 20px;
+            border-radius: 40px;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 500px) {
+            .glass-card {
+                padding: 24px 18px;
+            }
+            .hero-title {
+                font-size: 26px;
+            }
+            .envelope-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .envelope-card .icon {
+                font-size: 26px;
+            }
+            .letter-text {
+                font-size: 18px;
+            }
+            .memory-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .lightbox-overlay {
+                padding: 20px;
+            }
+            .lightbox-close {
+                top: 15px;
+                right: 20px;
+                font-size: 30px;
+            }
+            .lightbox-nav {
+                font-size: 32px;
+                padding: 10px 5px;
+            }
+            .lightbox-nav.prev {
+                left: 5px;
+            }
+            .lightbox-nav.next {
+                right: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <header>
+        <div class="header-inner">
+            <div class="logo">Аня <span>·</span></div>
+            <nav>
+                <a href="../index.html">Главная</a>
+                <a href="about.html">Обо мне</a>
+                <a href="quotes.html">Цитаты</a>
+                <a href="memes.html">Мемы</a>
+                <a href="creativity.html">Творчество</a>
+                <a href="achievements.html">Достижения</a>
+                <a href="music.html">🎵 Музыка</a>
+	<a href="fun.html">Для прикола</a>
+                <a href="surprise.html">✦ Сюрприз</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===== СЦЕНА ===== -->
+    <div class="stage">
+
+        <!-- ФОН -->
+        <canvas id="bgCanvas"></canvas>
+
+        <!-- ===== ГЛАВНАЯ КАРТОЧКА ===== -->
+        <div class="glass-card" id="mainCard">
+
+            <!-- ===== ПРИВЕТСТВИЕ ===== -->
+            <div id="welcomeScreen">
+                <span class="hero-emoji">✦</span>
+                <div class="hero-title">Привет, <span>Аня</span></div>
+                <div class="hero-sub">Этот сюрприз — для тебя. Готова?</div>
+                <button class="btn-primary" id="openBtn">Открыть ✦</button>
+            </div>
+
+            <!-- ===== МЕНЮ ===== -->
+            <div id="menuScreen" style="display:none;">
+                <div style="font-size:14px; color:#8a9aae; margin-bottom:6px;">📬 Выбери конверт</div>
+                <div class="envelope-grid">
+                    <div class="envelope-card" data-target="memories">
+                        <span class="icon">📸</span>
+                        <div class="label">Воспоминания</div>
+                    </div>
+                    <div class="envelope-card" data-target="letter">
+                        <span class="icon">✉️</span>
+                        <div class="label">Письмо</div>
+                    </div>
+                    <div class="envelope-card" data-target="reasons">
+                        <span class="icon">❤️</span>
+                        <div class="label">Причины</div>
+                    </div>
+                    <div class="envelope-card" data-target="rsvp">
+                        <span class="icon">🎫</span>
+                        <div class="label">Приглашение</div>
+                    </div>
+                </div>
+                <button class="back-btn" id="backToWelcome">← Назад</button>
+            </div>
+
+            <!-- ===== КОНТЕНТ ===== -->
+            <div id="contentArea" style="display:none;">
+                <button class="back-btn" id="backToMenu">← Назад</button>
+
+                <!-- Воспоминания -->
+                <div class="content-block" id="content-memories">
+                    <h3>📸 Воспоминания</h3>
+                    <p style="margin-bottom:6px;">Твои моменты — в этих кадрах.</p>
+                    <div class="memory-grid" id="memoryGrid"></div>
+                </div>
+
+                <!-- Письмо -->
+                <div class="content-block" id="content-letter">
+                    <h3>✉️ Письмо</h3>
+                    <div class="letter-envelope" id="letterEnvelope">
+                        <span class="icon">💌</span>
+                        <div class="label">Нажми, чтобы открыть</div>
+                    </div>
+                    <div class="letter-text" id="letterText" style="display:none;">
+                        Аня, ты — самое светлое, что есть в моей жизни. Этот сайт я сделал для тебя, чтобы ты знала: ты особенная. ❤️
+                    </div>
+                </div>
+
+                <!-- Причины -->
+                <div class="content-block" id="content-reasons">
+                    <h3>❤️ Почему ты особенная</h3>
+                    <ul style="text-align:left; color:#b0b8c4; font-size:15px; line-height:2.2; list-style:none; padding:0;">
+                        <li>✨ Ты вдохновляешь меня</li>
+                        <li>🌸 Ты — сама доброта</li>
+                        <li>🌟 Ты умеешь слушать</li>
+                        <li>🔥 Ты сильная духом</li>
+                        <li>🌙 С тобой спокойно</li>
+                    </ul>
+                </div>
+
+                <!-- RSVP -->
+                <div class="content-block" id="content-rsvp">
+                    <h3>🎫 Приглашение</h3>
+                    <p style="margin-bottom:8px;">Когда встретимся?</p>
+                    <input class="rsvp-input" id="rsvpDate" type="date" />
+                    <input class="rsvp-input" id="rsvpTime" type="time" />
+                    <button class="btn-primary" id="rsvpBtn" style="width:100%; margin-top:10px; padding:12px;">Подтвердить ✦</button>
+                    <div class="rsvp-result" id="rsvpResult"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== ЛАЙТБОКС ===== -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <button class="lightbox-close" id="lightboxClose">✕</button>
+        <button class="lightbox-nav prev" id="lightboxPrev">‹</button>
+        <button class="lightbox-nav next" id="lightboxNext">›</button>
+        <img id="lightboxImage" src="" alt="Увеличенное фото" />
+        <div class="lightbox-counter" id="lightboxCounter">1 / 1</div>
+    </div>
+
+    <script>
+        // =============================================================
+        //  1. ФОН
+        // =============================================================
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const gridSize = 40;
+        let dots = [];
+
+        function initDots() {
+            dots = [];
+            for (let x = 0; x <= w + gridSize; x += gridSize) {
+                for (let y = 0; y <= h + gridSize; y += gridSize) {
+                    dots.push({ x, y, baseX: x, baseY: y });
+                }
+            }
+        }
+        initDots();
+
+        let mouse = { x: -9999, y: -9999 };
+        document.addEventListener('mousemove', function(e) {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        function drawGrid(time) {
+            ctx.clearRect(0, 0, w, h);
+
+            dots.forEach(d => {
+                let dx = d.baseX - mouse.x;
+                let dy = d.baseY - mouse.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                let offset = 0;
+                if (dist < 200) {
+                    offset = Math.sin(dist / 30 - time * 0.004) * 5 * (1 - dist / 200);
+                }
+                d.x = d.baseX + (dx / (dist || 1)) * offset;
+                d.y = d.baseY + (dy / (dist || 1)) * offset;
+            });
+
+            ctx.strokeStyle = 'rgba(212, 197, 160, 0.05)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < dots.length; i++) {
+                for (let j = i + 1; j < dots.length; j++) {
+                    const a = dots[i],
+                        b = dots[j];
+                    const dx = a.x - b.x,
+                        dy = a.y - b.y;
+                    if (Math.sqrt(dx * dx + dy * dy) < gridSize * 1.5) {
+                        ctx.beginPath();
+                        ctx.moveTo(a.x, a.y);
+                        ctx.lineTo(b.x, b.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            dots.forEach(d => {
+                ctx.beginPath();
+                ctx.arc(d.x, d.y, 1.2, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(212, 197, 160, 0.2)';
+                ctx.fill();
+            });
+
+            requestAnimationFrame(drawGrid);
+        }
+        drawGrid(0);
+
+        // =============================================================
+        //  2. НАВИГАЦИЯ
+        // =============================================================
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const menuScreen = document.getElementById('menuScreen');
+        const contentArea = document.getElementById('contentArea');
+        const openBtn = document.getElementById('openBtn');
+        const backToWelcome = document.getElementById('backToWelcome');
+        const backToMenu = document.getElementById('backToMenu');
+
+        openBtn.addEventListener('click', function() {
+            welcomeScreen.style.display = 'none';
+            menuScreen.style.display = 'block';
+        });
+
+        backToWelcome.addEventListener('click', function() {
+            menuScreen.style.display = 'none';
+            welcomeScreen.style.display = 'block';
+            document.querySelectorAll('.content-block').forEach(el => el.classList.remove('active'));
+            contentArea.style.display = 'none';
+        });
+
+        backToMenu.addEventListener('click', function() {
+            document.querySelectorAll('.content-block').forEach(el => el.classList.remove('active'));
+            contentArea.style.display = 'none';
+            menuScreen.style.display = 'block';
+        });
+
+        // =============================================================
+        //  3. КОНВЕРТЫ
+        // =============================================================
+        document.querySelectorAll('.envelope-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const target = this.dataset.target;
+                menuScreen.style.display = 'none';
+                contentArea.style.display = 'block';
+                document.querySelectorAll('.content-block').forEach(el => el.classList.remove('active'));
+                const targetEl = document.getElementById('content-' + target);
+                if (targetEl) targetEl.classList.add('active');
+            });
+        });
+
+        // =============================================================
+        //  4. ПИСЬМО
+        // =============================================================
+        document.getElementById('letterEnvelope').addEventListener('click', function() {
+            this.style.display = 'none';
+            document.getElementById('letterText').style.display = 'block';
+        });
+
+        // =============================================================
+        //  5. RSVP
+        // =============================================================
+        document.getElementById('rsvpBtn').addEventListener('click', function() {
+            const date = document.getElementById('rsvpDate').value;
+            const time = document.getElementById('rsvpTime').value;
+            const result = document.getElementById('rsvpResult');
+            if (date && time) {
+                result.textContent = '🎉 Договорились! ' + date + ' в ' + time + ' ❤️';
+                for (let i = 0; i < 30; i++) {
+                    const p = document.createElement('div');
+                    p.style.cssText =
+                        `position:fixed; left:${Math.random()*100}vw; top:-10px; width:8px; height:8px; background:hsl(${Math.random()*360},80%,60%); border-radius:50%; pointer-events:none; z-index:999; animation: fallParticle ${Math.random()*2+1}s linear forwards;`;
+                    document.body.appendChild(p);
+                    setTimeout(() => p.remove(), 3000);
+                }
+                if (!document.getElementById('confettiStyle')) {
+                    const style = document.createElement('style');
+                    style.id = 'confettiStyle';
+                    style.textContent =
+                        `@keyframes fallParticle { 0% { transform: translateY(0) rotate(0deg); opacity:1; } 100% { transform: translateY(110vh) rotate(720deg); opacity:0; } }`;
+                    document.head.appendChild(style);
+                }
+            } else {
+                result.textContent = '❌ Выбери дату и время!';
+            }
+        });
+
+        // =============================================================
+        //  6. ГАЛЕРЕЯ + ЛАЙТБОКС
+        // =============================================================
+        const memoryGrid = document.getElementById('memoryGrid');
+
+        // 🔥 СЮДА ВСТАВЬ СВОИ ИМЕНА ФАЙЛОВ
+        const photos = [
+            'photo1.jpg',
+            'photo2.jpg',
+            'photo3.jpg',
+            'photo4.jpg',
+            'photo5.jpg',
+            'photo6.jpg',
+        ];
+
+        photos.forEach(file => {
+            const div = document.createElement('div');
+            div.className = 'memory-item';
+            div.innerHTML = `<img src="../images/surprise/${file}" alt="Воспоминание">`;
+            memoryGrid.appendChild(div);
+        });
+
+        // ===== ЛАЙТБОКС =====
+        const lightboxOverlay = document.getElementById('lightboxOverlay');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxClose = document.getElementById('lightboxClose');
+        const lightboxPrev = document.getElementById('lightboxPrev');
+        const lightboxNext = document.getElementById('lightboxNext');
+        const lightboxCounter = document.getElementById('lightboxCounter');
+
+        let currentPhotoIndex = 0;
+
+        // Открыть лайтбокс по клику на картинку
+        document.querySelectorAll('.memory-item img').forEach((img, index) => {
+            img.addEventListener('click', function(e) {
+                e.stopPropagation();
+                currentPhotoIndex = index;
+                updateLightbox();
+                lightboxOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        function updateLightbox() {
+            const allImages = document.querySelectorAll('.memory-item img');
+            if (allImages.length === 0) return;
+            lightboxImage.src = allImages[currentPhotoIndex].src;
+            lightboxCounter.textContent = `${currentPhotoIndex + 1} / ${allImages.length}`;
+        }
+
+        function changePhoto(direction) {
+            const allImages = document.querySelectorAll('.memory-item img');
+            if (allImages.length === 0) return;
+            currentPhotoIndex = (currentPhotoIndex + direction + allImages.length) % allImages.length;
+            updateLightbox();
+        }
+
+        // Закрыть по клику на фон
+        lightboxOverlay.addEventListener('click', function(e) {
+            if (e.target === lightboxOverlay) {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Закрыть по крестику
+        lightboxClose.addEventListener('click', function(e) {
+            e.stopPropagation();
+            lightboxOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // Стрелка "назад"
+        lightboxPrev.addEventListener('click', function(e) {
+            e.stopPropagation();
+            changePhoto(-1);
+        });
+
+        // Стрелка "вперёд"
+        lightboxNext.addEventListener('click', function(e) {
+            e.stopPropagation();
+            changePhoto(1);
+        });
+
+        // Клавиши ← → и Esc
+        document.addEventListener('keydown', function(e) {
+            if (!lightboxOverlay.classList.contains('active')) return;
+            if (e.key === 'Escape') {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            if (e.key === 'ArrowLeft') changePhoto(-1);
+            if (e.key === 'ArrowRight') changePhoto(1);
+        });
+    </script>
+
+</body>
+</html>

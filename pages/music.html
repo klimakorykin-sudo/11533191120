@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Аня · Музыка</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+        .music-folder-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .music-folder {
+            background: #141a22;
+            padding: 16px 24px;
+            border-radius: 16px;
+            border-left: 4px solid #d4c5a0;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+        .music-folder:hover {
+            background: #1a212b;
+            transform: translateX(6px);
+        }
+        .music-folder .folder-name {
+            font-size: 18px;
+            color: #e8e6e3;
+            font-weight: 500;
+        }
+        .music-folder .folder-arrow {
+            color: #6a7a90;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+        .music-folder .folder-arrow.open {
+            transform: rotate(90deg);
+        }
+
+        .song-list {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            margin: 12px 0 20px 20px;
+            padding-left: 20px;
+            border-left: 2px solid #2e3643;
+        }
+        .song-list.open {
+            display: flex;
+        }
+
+        .song-item {
+            background: #0d0f14;
+            padding: 12px 18px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: 0.3s;
+            border: 1px solid transparent;
+            flex-wrap: wrap;
+        }
+        .song-item:hover {
+            border-color: #2e3643;
+            background: #141a22;
+        }
+        .song-item .song-title {
+            color: #b0b8c4;
+            font-size: 16px;
+            white-space: nowrap;
+            min-width: 140px;
+        }
+
+        .song-item audio {
+            flex: 1;
+            min-width: 150px;
+            max-width: 400px;
+            height: 40px;
+            border-radius: 30px;
+            background: #1e232b;
+            outline: none;
+        }
+        .song-item audio::-webkit-media-controls-panel {
+            background: #1e232b;
+        }
+        .song-item audio::-webkit-media-controls-enclosure {
+            border-radius: 30px;
+            background: #1e232b;
+        }
+        .song-item audio::-webkit-media-controls-timeline {
+            background: #2e3643;
+            border-radius: 10px;
+            height: 4px;
+        }
+        .song-item audio::-webkit-media-controls-volume-slider {
+            display: none;
+        }
+
+        .no-audio {
+            color: #6a7a90;
+            font-size: 14px;
+        }
+
+        .empty-message {
+            color: #6a7a90;
+            text-align: center;
+            padding: 40px 0;
+            font-style: italic;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 24px;
+            color: #d4c5a0;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            color: #f0ebe0;
+            transform: translateX(-4px);
+        }
+        .quote-tip {
+            color: #6a7a90;
+            font-size: 14px;
+            margin-top: 30px;
+            text-align: center;
+            border-top: 1px solid #1e232b;
+            padding-top: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .song-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .song-item audio {
+                max-width: 100%;
+            }
+            .song-item .song-title {
+                white-space: normal;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-inner">
+            <div class="logo">Аня <span>·</span></div>
+            <nav>
+                <a href="../index.html">Главная</a>
+                <a href="about.html">Обо мне</a>
+                <a href="quotes.html">Цитаты</a>
+                <a href="memes.html">Мемы</a>
+                <a href="creativity.html">Творчество</a>
+                <a href="achievements.html">Достижения</a>
+                <a href="music.html">🎵 Музыка</a>
+	<a href="fun.html">Для прикола</a>
+                <a href="surprise.html">✦ Сюрприз</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🎵 Музыка для настроения</h2>
+            <p style="color: #b0b8c4; margin-bottom: 8px;">Выбери исполнителя или сборник.</p>
+
+            <div id="musicApp"></div>
+
+            <div class="quote-tip">
+                🎧 <em>«Тишина тоже говорит, если уметь слушать»</em> — Аня
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Сделано с <span class="heart">❤</span> для <strong>Сосницкой Анны Андреевны</strong></p>
+            <p class="footer-year">проект · 2026</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // ============================================================
+        //  ВСЕ ПЕСНИ ИЗ ФИЛЬМА «ДЕВУШКА БЕЗ АДРЕСА»
+        //  + другие известные песни Николая Рыбникова
+        // ============================================================
+
+        const musicData = {
+            "Николай Рыбников": [
+                { title: "Девушка без адреса", file: "../music/Николай Рыбников/Девушка без адреса.mp3" },
+                { title: "Душа", file: "../music/Николай Рыбников/Душа.mp3" },
+                { title: "Когда весна придёт", file: "../music/Николай Рыбников/Когда весна придёт.mp3" },
+                { title: "Тишина за Рогожской заставою", file: "../music/Николай Рыбников/Тишина за Рогожской заставою.mp3" },
+                { title: "Марш высотников", file: "../music/Николай Рыбников/Марш высотников.mp3" },
+                { title: "Старый клён", file: "../music/Николай Рыбников/Старый клён.mp3" }
+            ],
+            "Современная музыка": [
+                { title: "La vaguelette", file: "../music/Современная музыка/La vaguelette.mp3" },
+                { title: "Poka-pora", file: "../music/Современная музыка/Poka-pora.mp3" },
+                { title: "Everybody", file: "../music/Современная музыка/Everybody.mp3" },
+                { title: "Корабль в бутылке", file: "../music/Современная музыка/Корабль в бутылке.mp3" },
+                { title: "Закрой за мной дверь", file: "../music/Современная музыка/Закрой за мной дверь.mp3" },
+                { title: "Agape", file: "../music/Современная музыка/Agape.mp3" }
+            ]
+        };
+
+        // ============================================================
+        //  ПРИЛОЖЕНИЕ (НЕ ТРОГАЙ)
+        // ============================================================
+
+        const app = document.getElementById('musicApp');
+
+        function renderFolders() {
+            const folderNames = Object.keys(musicData);
+            if (folderNames.length === 0) {
+                app.innerHTML = '<div class="empty-message">🎵 Здесь пока нет музыки</div>';
+                return;
+            }
+
+            let html = '<div class="music-folder-list">';
+            folderNames.forEach(name => {
+                html += `
+                    <div class="music-folder" data-folder="${name}">
+                        <span class="folder-name">📁 ${name}</span>
+                        <span class="folder-arrow">›</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            app.innerHTML = html;
+
+            document.querySelectorAll('.music-folder').forEach(el => {
+                el.addEventListener('click', function() {
+                    const folderName = this.dataset.folder;
+                    renderSongs(folderName);
+                });
+            });
+        }
+
+        function renderSongs(folderName) {
+            const songs = musicData[folderName];
+            if (!songs || songs.length === 0) {
+                app.innerHTML = `<div class="empty-message">🎵 В папке "${folderName}" пока нет песен</div>`;
+                return;
+            }
+
+            let html = `
+                <div class="back-link" id="backToFolders">← Назад к списку</div>
+                <h3 style="color:#d4c5a0; margin:16px 0 8px;">📁 ${folderName}</h3>
+                <div class="song-list open">
+            `;
+            songs.forEach(song => {
+                html += `
+                    <div class="song-item">
+                        <span class="song-title">${song.title}</span>
+                        ${song.file ? `<audio controls><source src="${song.file}" type="audio/mpeg">Ваш браузер не поддерживает аудио.</audio>` : '<span class="no-audio">🎧 Трек скоро появится</span>'}
+                    </div>
+                `;
+            });
+            html += '</div>';
+            app.innerHTML = html;
+
+            document.getElementById('backToFolders').addEventListener('click', renderFolders);
+        }
+
+        renderFolders();
+    </script>
+</body>
+</html>
